@@ -1,0 +1,42 @@
+name: Build and Publish .NET Core 6 App to Docker Hub
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Application
+        run: dotnet build --configuration Release
+
+      - name: Test Application
+        run: dotnet test
+
+      - name: Build and Publish Docker Image
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USER }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker build -t catalogservice:latest -f CatalogService/CatalogService.API/Dockerfile .
+          echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker tag catalogservice:latest $DOCKERHUB_USERNAME/catalogservice:latest
+          docker push $DOCKERHUB_USERNAME/catalogservice:latest
+
+      - name: Logout from Docker Hub
+        run: docker logout
