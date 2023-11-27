@@ -33,7 +33,7 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USER }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker build -t catalogservice:latest -f CatalogService/CatalogService.API/Dockerfile .
+          docker build -t catalogservice:latest -f CatalogService.API/Dockerfile .
           echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
           docker tag catalogservice:latest $DOCKERHUB_USERNAME/catalogservice:latest
           docker push $DOCKERHUB_USERNAME/catalogservice:latest
