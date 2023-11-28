@@ -43,6 +43,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          docker build -t catalogservice:latest -f CatalogService.API/Dockerfile .
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"caperuiz_EngExMentoring" /o:"caperuiz" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          docker build -t catalogservice:latest -f CatalogService.API/Dockerfile .
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
