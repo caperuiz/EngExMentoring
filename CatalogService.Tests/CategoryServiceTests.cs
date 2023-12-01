@@ -28,7 +28,7 @@ namespace CatalogService.Tests
             var result = await categoryService.GetAllCategoriesAsync();
 
             // Assert
-            Assert.Null(result);
+            Assert.NotNull(result);
             Assert.Equal(2, result.Count());
         }
 
